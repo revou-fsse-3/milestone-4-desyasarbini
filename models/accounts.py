@@ -14,5 +14,26 @@ class Accounts(Base):
     created_at = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
+    user = relationship("User", back_populates="accounts")
+
     def __repr__(self):
         return f'<Accounts {self.id}>'
+
+    # def serialize(self, full=True):
+    #     if full:
+    #         return {
+    #             'id': self.id,
+    #             'user_id': self.user_id,
+    #             'account_type': self.account_type,
+    #             'account_number': self.account_number,
+    #             'balance': self.balance,
+    #             'created_at': self.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+    #             'updated_at': self.updated_at.strftime("%Y-%m-%d %H:%M:%S")
+    #         }
+    #     else:
+    #         return {
+    #             'id': self.id,
+    #             'user_id': self.user_id,
+    #             'account_type': self.account_type,
+    #             'account_number': self.account_number,
+    #         }

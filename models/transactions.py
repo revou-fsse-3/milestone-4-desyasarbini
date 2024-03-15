@@ -2,7 +2,7 @@ from models.base import Base
 from sqlalchemy import Integer, String, Text, DECIMAL, DateTime, ForeignKey
 from sqlalchemy.orm import mapped_column, relationship
 from sqlalchemy.sql import func
-from app.models.accounts import Accounts
+from models.accounts import Accounts
 
 class Transactions(Base):
     __tablename__ = 'transactions'
@@ -23,3 +23,21 @@ class Transactions(Base):
 
     def __repr__(self):
         return f'<Transactions {self.type}>'
+    
+    # def serialize(self, full=True):
+    #     if full:
+    #         return {
+    #             'id': self.id,
+    #             'from_account_id': self.from_account_id,
+    #             'to_account_id': self.to_account_id,
+    #             'amount': self.amount,
+    #             'type': self.type,
+    #             'created_at': self.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+    #         }
+    #     else:
+    #         return {
+    #             'id': self.id,
+    #             'to_account_id': self.to_account_id,
+    #             'amount': self.amount,
+    #             'type': self.type,
+    #         }
