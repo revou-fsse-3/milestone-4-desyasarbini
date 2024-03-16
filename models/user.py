@@ -1,7 +1,7 @@
 from models.base import Base
-from sqlalchemy import Integer, String, DateTime, func
-from sqlalchemy.orm import mapped_column, relationship
 from sqlalchemy.sql import func
+from sqlalchemy.orm import mapped_column, relationship
+from sqlalchemy import Integer, String, DateTime
 from flask_login import UserMixin
 import bcrypt
 
@@ -15,8 +15,25 @@ class User(Base, UserMixin):
     created_at = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
-    # accounts = relationship("Accounts", back_populates="user", cascade="all, delete-orphan")
+    # account = relationship("Account", cascade="all,delete-orphan")
 
+    def serialize(self, full=True):
+        if full:
+            return {
+                'id': self.id,
+                'username': self.username,
+                'email': self.email,
+                'password': self.password,
+                'created_at': self.created_at,
+                'updated_at': self.updated_at
+            }
+        else:
+            return {
+                'id': self.id,
+                'username': self.username,
+                'email': self.email
+            }
+    
     def __repr__(self):
         return f'<User{self.username}>'
 
@@ -27,20 +44,3 @@ class User(Base, UserMixin):
     # u/ check password yg ter-encrypt
     def check_password(self, password):
         return bcrypt.checkpw(password.encode('utf-8'), self.password.encode('utf-8'))
-
-    # def serialize(self, full=True):
-    #     if full:
-    #         return {
-    #             'id': self.id,
-    #             'username': self.username,
-    #             'email': self.email,
-    #             'password': self.password,
-    #             'created_at': self.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-    #             'updated_at': self.updated_at.strftime("%Y-%m-%d %H:%M:%S")
-    #         }
-    #     else:
-    #         return {
-    #             'id': self.id,
-    #             'username': self.username,
-    #             'email': self.email
-    #         }

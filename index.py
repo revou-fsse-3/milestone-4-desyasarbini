@@ -4,18 +4,17 @@ from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
 import os
 
-from connectors.mysql_connectors import engine
+from connector.mysql_connector import engine
 from models.user import User
-from models.accounts import Accounts
 
 # Authentication token
 from flask_login import LoginManager
 from flask_jwt_extended import JWTManager
 
-# Load Controller Files
-from controllers.user_management import user_management_routes
-from controllers.account_management import account_management_routes
-from controllers.transaction_management import transaction_management_routes
+# Route files
+from route.user_management_route import user_management_routes
+from route.account_management_route import account_management_routes
+from route.transaction_management_route import transaction_management_routes
 
 load_dotenv()
 
@@ -46,11 +45,4 @@ app.register_blueprint(transaction_management_routes)
 
 @app.route("/")
 def hello_world():
-    account_query = select(Accounts)
-    connection = engine.connect()
-    Session = sessionmaker(connection)
-    with Session() as session:
-        result = session.execute(account_query)
-        for row in result.scalars():
-            print(f'ID: {row.id}, Name: {row.account_type}')
     return "Berhasil terhubung ke database"
