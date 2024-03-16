@@ -52,5 +52,5 @@ def hello_world():
     with Session() as session:
         result = session.execute(account_query)
         for row in result.scalars():
-            print(f'ID: {row.id}, Name: {row.username}')
+            print(f'ID: {row.id}, Name: {row.account_type}')
     return "Berhasil terhubung ke database"

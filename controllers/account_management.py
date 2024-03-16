@@ -1,23 +1,22 @@
-from flask import Blueprint, render_template, request, redirect, jsonify, url_for
-from connectors.mysql_connectors import engine
+from flask import Blueprint, request, jsonify
+from connectors.mysql_connectors import engine, Session
 from models.accounts import Accounts
-from sqlalchemy import select
-from sqlalchemy import func
+from models.transactions import Transactions
+from sqlalchemy import select, or_
 
 from flask_login import current_user, login_required
 from sqlalchemy.orm import sessionmaker
-from flask_login import login_user, logout_user
 from flask_jwt_extended import jwt_required
 
 # Definisikan Blueprint untuk rute-rute terkait produk
 account_management_routes = Blueprint('account_management_routes', __name__)
 
-@account_management_routes.routes("/accounts", methods=['POST'])
+@account_management_routes.route("/accounts", methods=['POST'])
 @login_required
 def create_account():
-    new_account = Accounts (
-        account_type = request.form['account_type']
-        account_number = request.form['account_number']
+    new_account = Accounts(
+        account_type = request.form['account_type'],
+        account_number = request.form['account_number'],
         balance = request.form['balance']
     )
 
@@ -46,14 +45,14 @@ def account_home():
             search_query = request.args.get('query')
             account_query = account_query.where(or_(Accounts.account_type.like(f'%{search_query}%')))
         
-        accounts = session_execute(account_query)
-        accounts = accounts.scalaras()
+        accounts = session.execute(account_query)
+        accounts = accounts.scalars()
         response_data['accounts'] = accounts
 
     except Exception as e:
         return jsonify({"message": e})
 
-    response_data['account_type'] = current_user.account_type
+    response_data['name'] = current_user.name
     return jsonify(response_data)
 
 @account_management_routes.route("/accounts/<id>", methods=['GET'])

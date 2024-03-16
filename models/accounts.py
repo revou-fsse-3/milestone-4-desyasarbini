@@ -14,7 +14,7 @@ class Accounts(Base):
     created_at = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
-    user = relationship("User", back_populates="accounts")
+    # user = relationship("User", back_populates="accounts")
 
     def __repr__(self):
         return f'<Accounts {self.id}>'
